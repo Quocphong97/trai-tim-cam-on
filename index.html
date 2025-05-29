@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>❤️ Chạm để vào ❤️</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: black;
+      overflow: hidden;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-family: sans-serif;
+    }
+    #heartCanvas {
+      width: 100vw;
+      height: 100vh;
+      display: block;
+    }
+    .click-text {
+      position: absolute;
+      bottom: 60px;
+      font-size: 1.5em;
+      animation: blink 1.2s infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="heartCanvas"></canvas>
+  <div class="click-text">Hãy nhấn vào trái tim</div>
+
+  <script>
+    const canvas = document.getElementById('heartCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const particles = [];
+    const heartFunction = (t) => {
+      const x = 16 * Math.pow(Math.sin(t), 3);
+      const y = 13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t);
+      return [x, -y];
+    };
+
+    class Particle {
+      constructor(x, y, scale) {
+        this.x = x;
+        this.y = y;
+        this.size = 2 + Math.random() * 2;
+        this.opacity = 0;
+        this.scale = scale;
+        this.life = 0;
+      }
+      update() {
+        this.opacity = Math.sin(this.life);
+        this.life += 0.03;
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255,100,150,${this.opacity})`;
+        ctx.fill();
+      }
+    }
+
+    const createHeart = () => {
+      particles.length = 0;
+      for (let i = 0; i < 100; i++) {
+        const t = Math.random() * 2 * Math.PI;
+        const [x, y] = heartFunction(t);
+        const scale = 12;
+        const px = canvas.width / 2 + x * scale;
+        const py = canvas.height / 2 + y * scale;
+        particles.push(new Particle(px, py, scale));
+      }
+    };
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (const p of particles) {
+        p.update();
+        p.draw();
+      }
+      requestAnimationFrame(animate);
+    }
+
+    createHeart();
+    animate();
+
+    canvas.addEventListener('click', () => {
+      window.location.href = "main.html";
+    });
+
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      createHeart();
+    });
+  </script>
+</body>
+</html>
