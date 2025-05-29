@@ -1,140 +1,97 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Lời cảm ơn và tình yêu</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lời Cảm Ơn</title>
   <style>
-    html, body {
+    body {
       margin: 0;
       padding: 0;
-      background: linear-gradient(to bottom, #ffdde1, #ee9ca7);
+      background: linear-gradient(to bottom, #ffccd5, #ffe6eb);
       font-family: 'Segoe UI', sans-serif;
+      text-align: center;
+      color: #8B0000;
       overflow: hidden;
     }
-    .content {
-      position: relative;
-      z-index: 1;
-      text-align: center;
-      color: #fff;
-      padding: 5vh 10vw;
-    }
-    .content h1 {
-      font-size: 3em;
-      margin-bottom: 0.5em;
-      animation: fadeInDown 1.5s ease;
-    }
-    .content p {
-      font-size: 1.4em;
-      margin: 1em 0;
-      line-height: 1.6;
-      animation: fadeIn 2s ease;
-    }
-    @keyframes fadeInDown {
-      from { opacity: 0; transform: translateY(-30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
+
+    h1 {
+      font-size: 2rem;
+      margin-top: 30px;
     }
 
-    canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: 0;
-      pointer-events: none;
+    .message {
+      margin: 20px;
+      font-size: 1.1rem;
+      line-height: 1.6;
     }
 
     audio {
+      margin-top: 20px;
+    }
+
+    .hearts {
       position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 2;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: 0;
+    }
+
+    .hearts span {
+      position: absolute;
+      color: red;
+      font-size: 1.5rem;
+      animation: fall 8s linear infinite;
+    }
+
+    @keyframes fall {
+      0% {
+        top: -10%;
+        opacity: 0;
+        transform: translateX(0);
+      }
+      50% {
+        opacity: 1;
+      }
+      100% {
+        top: 110%;
+        opacity: 0;
+        transform: translateX(20px);
+      }
     }
   </style>
 </head>
 <body>
-  <canvas id="heartCanvas"></canvas>
-
-  <div class="content">
-    <h1>💖 Gửi đến người đặc biệt 💖</h1>
-    <p>Cảm ơn bạn đã luôn bên cạnh mình trong những lúc vui buồn.</p>
-    <p>Tình cảm này là thật lòng – không quá ồn ào, nhưng luôn chân thành.</p>
-    <p>Cuộc sống này có thể đầy thử thách, nhưng chỉ cần có bạn, mọi thứ trở nên đáng giá hơn rất nhiều.</p>
-    <p>Yêu bạn! 💕</p>
+    <h1>💖 Gửi đến người phụ nữ đặc biệt nhất lòng anh 💖</h1>
+  <div class="message">
+    Cảm ơn em đã luôn bên cạnh anh trong những lúc vui buồn.<br />
+    Tình cảm này là thật lòng – không quá ồn ào, nhưng luôn chân thành.<br />
+    Cuộc sống này có thể đầy thử thách, nhưng chỉ cần có em, mọi thứ trở nên đáng giá hơn rất nhiều.<br /><br />
+    💕 Yêu Vợ! 💕
   </div>
 
-  <audio autoplay loop controls>
+  <audio controls autoplay loop>
     <source src="love.mp3" type="audio/mpeg">
-    Trình duyệt của bạn không hỗ trợ phát nhạc.
+    Trình duyệt của bạn không hỗ trợ audio.
   </audio>
 
+  <div class="hearts" id="hearts"></div>
+
   <script>
-    const canvas = document.getElementById("heartCanvas");
-    const ctx = canvas.getContext("2d");
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    let hearts = [];
-
-    class Heart {
-      constructor() {
-        this.x = Math.random() * canvas.width;
-        this.y = -10;
-        this.size = Math.random() * 10 + 10;
-        this.speed = Math.random() * 1 + 0.5;
-        this.opacity = Math.random() * 0.5 + 0.5;
-      }
-
-      draw() {
-        ctx.beginPath();
-        ctx.moveTo(this.x, this.y);
-        ctx.bezierCurveTo(this.x + this.size / 2, this.y - this.size / 2,
-                          this.x + this.size * 1.5, this.y + this.size / 3,
-                          this.x, this.y + this.size);
-        ctx.bezierCurveTo(this.x - this.size * 1.5, this.y + this.size / 3,
-                          this.x - this.size / 2, this.y - this.size / 2,
-                          this.x, this.y);
-        ctx.fillStyle = `rgba(255, 105, 180, ${this.opacity})`;
-        ctx.fill();
-      }
-
-      update() {
-        this.y += this.speed;
-        if (this.y > canvas.height + this.size) {
-          this.y = -10;
-          this.x = Math.random() * canvas.width;
-        }
-      }
-    }
-
-    function init() {
-      hearts = [];
-      for (let i = 0; i < 80; i++) {
-        hearts.push(new Heart());
-      }
-    }
-
-    function animate() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      hearts.forEach((heart) => {
-        heart.update();
-        heart.draw();
-      });
-      requestAnimationFrame(animate);
-    }
-
-    init();
-    animate();
-
-    window.addEventListener("resize", () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      init();
-    });
+    const hearts = document.getElementById("hearts");
+    setInterval(() => {
+      const heart = document.createElement("span");
+      heart.innerHTML = "❤️";
+      heart.style.left = Math.random() * 100 + "vw";
+      heart.style.fontSize = (Math.random() * 20 + 12) + "px";
+      hearts.appendChild(heart);
+      setTimeout(() => heart.remove(), 8000);
+    }, 300);
   </script>
 </body>
 </html>
+
